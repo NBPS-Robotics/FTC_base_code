@@ -28,5 +28,9 @@ class TeleOps extends NextFTCOpMode {
     public void onStartButtonPressed() {
         driverControlled = Drive.INSTANCE.driverControlledRobotCentric(gamepadManager);
         driverControlled.invoke();
+
+
+        gamepadManager.getGamepad2().getA().setPressedCommand(Lift.INSTANCE::toHigh);
+        gamepadManager.getGamepad2().getB().setPressedCommand(Lift.INSTANCE::toLow);
     }
 }
