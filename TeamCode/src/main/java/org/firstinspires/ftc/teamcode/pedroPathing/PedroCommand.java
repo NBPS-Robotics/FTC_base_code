@@ -7,14 +7,14 @@ import com.rowanmcalpin.nextftc.core.command.Command;
 
 import java.util.Set;
 
-public class pedroCommand extends Command {
+public class PedroCommand extends Command {
     private final Set<Subsystem> subsystems;
     private final Follower follower;
     private final PathChain path;
     private final boolean interruptible = true;
 
     //give it drive subsystem, your path, and the path follower
-    public pedroCommand(Set<Subsystem> subsystems, PathChain path, Follower follower) {
+    public PedroCommand(Set<Subsystem> subsystems, PathChain path, Follower follower) {
         this.subsystems = subsystems;
         this.path=path;
         this.follower=follower;
