@@ -29,4 +29,8 @@ public class pedroCommand extends Command {
     public void start() {//follows the path
         follower.followPath(path);
     }
+    @Override
+    public void stop(boolean interrupted) {
+        if(interrupted)follower.breakFollowing();
+    }
 }
