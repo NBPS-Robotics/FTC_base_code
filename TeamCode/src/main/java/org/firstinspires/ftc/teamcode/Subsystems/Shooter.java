@@ -22,7 +22,8 @@ public class Shooter extends Subsystem {
     public MotorEx trackMotor;
     public MotorEx intakeMotor;
 
-    public PIDFController controller = new PIDFController(0.005, 0.0, 0.0, new StaticFeedforward(0.0));
+    public PIDFController speedController1 = new PIDFController(0.005, 0.0, 0.0, new StaticFeedforward(0.0));
+    public PIDFController speedController2 = new PIDFController(0.005, 0.0, 0.0, new StaticFeedforward(0.0));
 
     public PIDFController shootSpeedController = new PIDFController(0.005, 0.0, 0.0, new StaticFeedforward(0.0));
 
@@ -42,7 +43,9 @@ public class Shooter extends Subsystem {
  */
 
     public Command spinShooter(double speed) {
-        return new LambdaCommand().setStart(()->controller.setTarget(speed));
+        return new LambdaCommand().setStart(()->{
+            speedController1.setTarget(speed);
+            speedController2.setTarget(speed);});
     }
 
 
@@ -53,11 +56,13 @@ public class Shooter extends Subsystem {
         shootMotor2 = new MotorEx(name2);
         trackMotor = new MotorEx(name3);
         intakeMotor = new MotorEx(name4);
+        speedController1.setTarget(0);
+        speedController2.setTarget(0);
     }
 
     @Override
     public void periodic() {
-        shootMotor1.setPower(controller.calculate(shootMotor1.getVelocity()));
-        shootMotor2.setPower(controller.calculate(shootMotor2.getVelocity()));
+        shootMotor1.setPower(speedController1.calculate(shootMotor1.getVelocity()));
+        shootMotor2.setPower(speedController2.calculate(shootMotor2.getVelocity()));
     }
 }
