@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.rowanmcalpin.nextftc.core.Subsystem;
 import com.rowanmcalpin.nextftc.core.command.Command;
+import com.rowanmcalpin.nextftc.core.command.utility.InstantCommand;
+import com.rowanmcalpin.nextftc.core.command.utility.LambdaCommand;
 import com.rowanmcalpin.nextftc.core.control.controllers.PIDFController;
 import com.rowanmcalpin.nextftc.core.control.controllers.feedforward.StaticFeedforward;
 import com.rowanmcalpin.nextftc.ftc.hardware.controllables.Controllable;
@@ -20,7 +22,7 @@ public class Shooter extends Subsystem {
     public MotorEx trackMotor;
     public MotorEx intakeMotor;
 
-    ;
+    public PIDFController controller = new PIDFController(0.005, 0.0, 0.0, new StaticFeedforward(0.0));
 
     public PIDFController shootSpeedController = new PIDFController(0.005, 0.0, 0.0, new StaticFeedforward(0.0));
 
@@ -39,8 +41,8 @@ public class Shooter extends Subsystem {
 
  */
 
-    public Command spinShooter() {
-        return new SetPower(shootMotor1, 0.5, this);
+    public Command spinShooter(double speed) {
+        return new LambdaCommand().setStart(()->controller.setTarget(speed));
     }
 
 
@@ -51,5 +53,11 @@ public class Shooter extends Subsystem {
         shootMotor2 = new MotorEx(name2);
         trackMotor = new MotorEx(name3);
         intakeMotor = new MotorEx(name4);
+    }
+
+    @Override
+    public void periodic() {
+        shootMotor1.setPower(controller.calculate(shootMotor1.getVelocity()));
+        shootMotor2.setPower(controller.calculate(shootMotor2.getVelocity()));
     }
 }
